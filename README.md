@@ -2,7 +2,7 @@
 
 This project provides a Rust implementation of the Texas Instruments BQ76952 3‑to‑16‑cell battery monitor and protector.
 
-It is based on TI’s reference documentation and verified on STM32 microcontrollers, rewritten to use `no_std` and `embedded-hal` traits.
+It is based on TI’s reference documentation, rewritten to use `no_std` and `embedded-hal` traits with a mockable I²C interface.
 
 The goal is to expose a safe, typed API for configuration, telemetry, protection, and FET/balancing control.
 
@@ -42,7 +42,7 @@ This driver is based on:
 
 - Monitor/Protector: Texas Instruments BQ76952  
 - Cells: 3–16 series Li‑ion / Li‑polymer / LiFePO₄  
-- MCU Tested: STM32WB55  
+- Target MCU: STM32 (or any `embedded-hal` compatible MCU)  
 - Interfaces: I²C, ALERT pin, TSx thermistors, FET drivers, cell inputs
 
 ---
