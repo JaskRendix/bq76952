@@ -1,0 +1,24 @@
+[package]
+name = "bq76952"
+version = "0.1.0"
+edition = "2021"
+authors = ["Giorgio"]
+license-file = "LICENSE"
+description = "A no_std embedded-hal 1.0 driver for the TI BQ76952 battery monitor and protector"
+readme = "README.md"
+repository = "https://github.com/your-username/bq76952-rs"
+keywords = ["bms", "bq76952", "embedded-hal", "no-std", "battery"]
+categories = ["embedded", "no-std", "hardware-support"]
+
+[dependencies]
+embedded-hal = "1.0"
+
+[dev-dependencies]
+embedded-hal-mock = "0.11"
+linux-embedded-hal = "0.4"
+
+[profile.release]
+opt-level = "s"      # Optimize for size
+lto = true           # Link-Time Optimization
+codegen-units = 1    # Better optimizations
+panic = "abort"      # Lower binary size for no_std
