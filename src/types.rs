@@ -3,19 +3,19 @@
 /// Device Security State representation based on battery status bits
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SecurityState {
-    Sealed = 0,
-    Unsealed = 1,
-    FullAccess = 2,
-    Reserved = 3,
+    Unknown = 0,
+    FullAccess = 1,
+    Unsealed = 2,
+    Sealed = 3,
 }
 
 impl From<u8> for SecurityState {
     fn from(val: u8) -> Self {
         match val & 0x03 {
-            0 => Self::Sealed,
-            1 => Self::Unsealed,
-            2 => Self::FullAccess,
-            _ => Self::Reserved,
+            1 => Self::FullAccess,
+            2 => Self::Unsealed,
+            3 => Self::Sealed,
+            _ => Self::Unknown,
         }
     }
 }
@@ -76,12 +76,12 @@ pub struct Protection {
 impl From<u8> for Protection {
     fn from(val: u8) -> Self {
         Self {
-            sc_dchg: (val & 0x01) != 0,
-            oc2_dchg: (val & 0x02) != 0,
-            oc1_dchg: (val & 0x04) != 0,
-            oc_chg: (val & 0x08) != 0,
-            cell_ov: (val & 0x10) != 0,
-            cell_uv: (val & 0x20) != 0,
+            sc_dchg: (val & 0x80) != 0,
+            oc2_dchg: (val & 0x40) != 0,
+            oc1_dchg: (val & 0x20) != 0,
+            oc_chg: (val & 0x10) != 0,
+            cell_ov: (val & 0x08) != 0,
+            cell_uv: (val & 0x04) != 0,
         }
     }
 }
@@ -98,11 +98,11 @@ pub struct SafetyAlertC {
 impl From<u8> for SafetyAlertC {
     fn from(val: u8) -> Self {
         Self {
-            ocd3: (val & 0x01) != 0,
-            scdl: (val & 0x02) != 0,
-            ocdl: (val & 0x04) != 0,
-            covl: (val & 0x08) != 0,
-            ptos: (val & 0x10) != 0,
+            ocd3: (val & 0x80) != 0,
+            scdl: (val & 0x40) != 0,
+            ocdl: (val & 0x20) != 0,
+            covl: (val & 0x10) != 0,
+            ptos: (val & 0x08) != 0,
         }
     }
 }
@@ -119,11 +119,11 @@ pub struct SafetyStatusC {
 impl From<u16> for SafetyStatusC {
     fn from(val: u16) -> Self {
         Self {
-            ocd3: (val & 0x0001) != 0,
-            scdl: (val & 0x0002) != 0,
-            ocdl: (val & 0x0004) != 0,
-            covl: (val & 0x0008) != 0,
-            ptos: (val & 0x0010) != 0,
+            ocd3: (val & 0x0080) != 0,
+            scdl: (val & 0x0040) != 0,
+            ocdl: (val & 0x0020) != 0,
+            covl: (val & 0x0010) != 0,
+            ptos: (val & 0x0008) != 0,
         }
     }
 }
@@ -174,20 +174,22 @@ pub struct BatteryStatus {
 impl From<u16> for BatteryStatus {
     fn from(val: u16) -> Self {
         Self {
-            sleep_mode: (val & 0x0001) != 0,
-            shutdown_pending: (val & 0x0004) != 0,
-            permanent_fault: (val & 0x0008) != 0,
-            safety_fault: (val & 0x0010) != 0,
-            fuse_pin: (val & 0x0020) != 0,
-            security_state: SecurityState::from(((val >> 6) & 0x0003) as u8),
-            wr_to_otp_blocked: (val & 0x0100) != 0,
-            wr_to_otp_pending: (val & 0x0200) != 0,
-            open_wire_check: (val & 0x0400) != 0,
-            wd_was_triggered: (val & 0x0800) != 0,
-            full_reset_occured: (val & 0x1000) != 0,
-            sleep_en_allowed: (val & 0x2000) != 0,
-            precharge_mode: (val & 0x4000) != 0,
-            config_update_mode: (val & 0x8000) != 0,
+            sleep_mode: (val & 0x8000) != 0,
+            shutdown_pending: (val & 0x2000) != 0,
+            permanent_fault: (val & 0x1000) != 0,
+            safety_fault: (val & 0x0800) != 0,
+            fuse_pin: (val & 0x0400) != 0,
+
+            security_state: SecurityState::from(((val >> 8) & 0x03) as u8),
+
+            wr_to_otp_blocked: (val & 0x0080) != 0,
+            wr_to_otp_pending: (val & 0x0040) != 0,
+            open_wire_check: (val & 0x0020) != 0,
+            wd_was_triggered: (val & 0x0010) != 0,
+            full_reset_occured: (val & 0x0008) != 0,
+            sleep_en_allowed: (val & 0x0004) != 0,
+            precharge_mode: (val & 0x0002) != 0,
+            config_update_mode: (val & 0x0001) != 0,
         }
     }
 }

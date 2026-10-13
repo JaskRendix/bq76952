@@ -188,14 +188,16 @@ where
 
     /// Control FET states directly
     pub fn set_fet(&mut self, fet: Fet, state: FetState) -> Result<(), Error<E>> {
-        let sub_cmd = match (fet, state) {
-            (Fet::Chg, FetState::On) => 0x0022,
-            (Fet::Chg, FetState::Off) => 0x0021,
-            (Fet::Dch, FetState::On) => 0x0024,
-            (Fet::Dch, FetState::Off) => 0x0023,
-            (Fet::All, FetState::On) => 0x0026,
-            (Fet::All, FetState::Off) => 0x0025,
+        let sub_cmd = match state {
+            FetState::Off => match fet {
+                Fet::Dch => 0x0093,
+                Fet::Chg => 0x0094,
+                Fet::All => 0x0095,
+            },
+
+            FetState::On => 0x0096,
         };
+
         self.sub_command(sub_cmd)
     }
 
@@ -250,7 +252,7 @@ where
 
     /// Read and parse Safety Status A flags
     pub fn get_safety_status_a(&mut self) -> Result<SafetyStatusA, Error<E>> {
-        let raw = self.direct_command(0x62)?;
+        let raw = self.direct_command(0x03)?;
         Ok(SafetyStatusA::from(raw))
     }
 
@@ -279,15 +281,15 @@ where
         Ok(status.security_state)
     }
 
-    /// Read and parse Safety Status B flags (Register 0x63)
+    /// Read and parse Safety Status B flags (Register 0x05)
     pub fn get_safety_status_b(&mut self) -> Result<SafetyStatusB, Error<E>> {
-        let raw = self.direct_command(0x63)?;
+        let raw = self.direct_command(0x05)?;
         Ok(SafetyStatusB::from(raw))
     }
 
-    /// Read and parse Safety Status C flags (Register 0x64)
+    /// Read and parse Safety Status C flags (Register 0x06)
     pub fn get_safety_status_c(&mut self) -> Result<SafetyStatusC, Error<E>> {
-        let raw = self.direct_command(0x64)?;
+        let raw = self.direct_command(0x06)?;
         Ok(SafetyStatusC::from(raw))
     }
 
@@ -493,7 +495,7 @@ mod tests {
     fn test_get_current() {
         let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
             0x10,
-            vec![0x38],
+            vec![0x3A],
             vec![0x34, 0x12],
         )]);
 
@@ -522,7 +524,7 @@ mod tests {
 
     #[test]
     fn test_set_fet_chg_on() {
-        let mut i2c = I2cMock::new(&[I2cTransaction::write(0x10, vec![0x3E, 0x22, 0x00])]);
+        let mut i2c = I2cMock::new(&[I2cTransaction::write(0x10, vec![0x3E, 0x96, 0x00])]);
 
         let mut dev = Bq76952::new(&mut i2c, 0x10);
         dev.set_fet(Fet::Chg, FetState::On).unwrap();
@@ -531,7 +533,7 @@ mod tests {
 
     #[test]
     fn test_set_fet_all_off() {
-        let mut i2c = I2cMock::new(&[I2cTransaction::write(0x10, vec![0x3E, 0x25, 0x00])]);
+        let mut i2c = I2cMock::new(&[I2cTransaction::write(0x10, vec![0x3E, 0x95, 0x00])]);
 
         let mut dev = Bq76952::new(&mut i2c, 0x10);
         dev.set_fet(Fet::All, FetState::Off).unwrap();
@@ -570,7 +572,7 @@ mod tests {
         let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
             0x10,
             vec![0x12],
-            vec![0x01, 0x00], // sleep_mode = true
+            vec![0x00, 0x80], // sleep_mode = true
         )]);
 
         let mut dev = Bq76952::new(&mut i2c, 0x10);
@@ -633,7 +635,7 @@ mod tests {
     fn test_get_safety_status_a() {
         let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
             0x10,
-            vec![0x62],
+            vec![0x03],
             vec![0x04, 0x00], // Mock: OCC bit set (bit 2 -> 0x0004)
         )]);
 
@@ -810,8 +812,8 @@ mod tests {
         // ocd3 expects bit 0 (val & 0x0001 != 0)
         let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
             0x10,
-            vec![0x63],
-            vec![0x01, 0x00],
+            vec![0x05],
+            vec![0x00, 0x80],
         )]);
 
         let mut dev = Bq76952::new(&mut i2c, 0x10);
@@ -825,7 +827,7 @@ mod tests {
         // ptos expects bit 4 (val & 0x0010 != 0)
         let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
             0x10,
-            vec![0x64],
+            vec![0x06],
             vec![0x10, 0x00],
         )]);
 
@@ -867,7 +869,7 @@ mod tests {
         let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
             0x10,
             vec![0x6E],
-            vec![0x01, 0x00],
+            vec![0x00, 0x80],
         )]);
 
         let mut dev = Bq76952::new(&mut i2c, 0x10);

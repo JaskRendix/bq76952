@@ -154,7 +154,7 @@ fn battery_status_all_set() {
     assert!(b.permanent_fault);
     assert!(b.safety_fault);
     assert!(b.fuse_pin);
-    assert_eq!(b.security_state, SecurityState::Reserved);
+    assert_eq!(b.security_state, SecurityState::Sealed);
     assert!(b.wr_to_otp_blocked);
     assert!(b.wr_to_otp_pending);
     assert!(b.open_wire_check);
@@ -168,10 +168,10 @@ fn battery_status_all_set() {
 #[test]
 fn battery_status_security_state_values() {
     let states = [
-        SecurityState::Sealed,
-        SecurityState::Unsealed,
+        SecurityState::Unknown,
         SecurityState::FullAccess,
-        SecurityState::Reserved,
+        SecurityState::Unsealed,
+        SecurityState::Sealed,
     ];
     for (i, &expected_state) in states.iter().enumerate() {
         let raw = (i as u16) << 6;
@@ -337,11 +337,12 @@ fn permanent_faults_specific_bits() {
 
 #[test]
 fn security_state_direct_mapping() {
-    assert_eq!(SecurityState::from(0), SecurityState::Sealed);
-    assert_eq!(SecurityState::from(1), SecurityState::Unsealed);
-    assert_eq!(SecurityState::from(2), SecurityState::FullAccess);
-    assert_eq!(SecurityState::from(3), SecurityState::Reserved);
-    assert_eq!(SecurityState::from(0xFF), SecurityState::Reserved); // masked
+    assert_eq!(SecurityState::from(0), SecurityState::Unknown);
+    assert_eq!(SecurityState::from(1), SecurityState::FullAccess);
+    assert_eq!(SecurityState::from(2), SecurityState::Unsealed);
+    assert_eq!(SecurityState::from(3), SecurityState::Sealed);
+
+    assert_eq!(SecurityState::from(0xFF), SecurityState::Sealed);
 }
 
 #[test]
@@ -408,7 +409,7 @@ fn battery_status_random_values() {
             SecurityState::Sealed
                 | SecurityState::Unsealed
                 | SecurityState::FullAccess
-                | SecurityState::Reserved
+                | SecurityState::Unknown
         ));
     }
 }
