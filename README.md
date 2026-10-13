@@ -164,9 +164,15 @@ cargo run --example monitor
 
 ## Documentation
 
-- BQ76952 Technical Reference Manual  
-  `https://www.ti.com/lit/ug/sluuby2a/sluuby2a.pdf` [(ti.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fwww.ti.com%2Flit%2Fug%2Fsluuby2a%2Fsluuby2a.pdf")  
-- Datasheet  
-  `https://www.ti.com/lit/ds/symlink/bq76952.pdf` [(ti.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fwww.ti.com%2Flit%2Fds%2Fsymlink%2Fbq76952.pdf")  
-- Software Development Guide  
-  `https://www.ti.com/lit/an/sluaa11a/sluaa11a.pdf` [(ti.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fwww.ti.com%2Flit%2Fan%2Fsluaa11a%2Fsluaa11a.pdf")
+This driver is implemented using the official Texas Instruments documentation for the BQ76952 and follows the command mappings, data-memory architecture, telemetry interfaces, protection mechanisms, and security model described by TI.
+
+### References
+
+- **BQ76952 Technical Reference Manual (SLUUBY2B)**  
+  https://www.ti.com/lit/ug/sluuby2b/sluuby2b.pdf
+
+- **BQ76952 Datasheet**  
+  https://www.ti.com/lit/ds/symlink/bq76952.pdf
+
+- **BQ76952 Software Development Guide**  
+  https://www.ti.com/lit/an/sluaa11a/sluaa11a.pdf
