@@ -71,3 +71,65 @@ pub const SUBCMD_ALL_FETS_ON: u16 = 0x0096;
 // Power Modes
 pub const SUBCMD_SLEEP_ENABLE: u16 = 0x0099;
 pub const SUBCMD_SLEEP_DISABLE: u16 = 0x009A;
+
+// ======= Direct Commands =======
+
+// Status
+pub const CMD_CONTROL_STATUS: u8 = 0x00;
+
+pub const CMD_SAFETY_ALERT_A: u8 = 0x02;
+pub const CMD_SAFETY_STATUS_A: u8 = 0x03;
+
+pub const CMD_SAFETY_ALERT_B: u8 = 0x04;
+pub const CMD_SAFETY_STATUS_B: u8 = 0x05;
+
+pub const CMD_SAFETY_ALERT_C: u8 = 0x06;
+pub const CMD_SAFETY_STATUS_C: u8 = 0x07;
+
+pub const CMD_PF_ALERT_A: u8 = 0x0A;
+pub const CMD_PF_STATUS_A: u8 = 0x0B;
+
+pub const CMD_PF_ALERT_B: u8 = 0x0C;
+pub const CMD_PF_STATUS_B: u8 = 0x0D;
+
+pub const CMD_PF_ALERT_C: u8 = 0x0E;
+pub const CMD_PF_STATUS_C: u8 = 0x0F;
+
+pub const CMD_PF_ALERT_D: u8 = 0x10;
+pub const CMD_PF_STATUS_D: u8 = 0x11;
+
+pub const CMD_BATTERY_STATUS: u8 = 0x12;
+
+// Voltage
+pub const CMD_CELL1_VOLTAGE: u8 = 0x14;
+pub const CMD_STACK_VOLTAGE: u8 = 0x34;
+pub const CMD_PACK_PIN_VOLTAGE: u8 = 0x36;
+pub const CMD_LD_PIN_VOLTAGE: u8 = 0x38;
+
+pub const CMD_MIN_CELL_VOLTAGE: u8 = 0x58;
+pub const CMD_MAX_CELL_VOLTAGE: u8 = 0x5A;
+
+// Current
+pub const CMD_CC2_CURRENT: u8 = 0x3A;
+
+// Alarm
+pub const CMD_ALARM_STATUS: u8 = 0x62;
+pub const CMD_ALARM_RAW_STATUS: u8 = 0x64;
+pub const CMD_ALARM_ENABLE: u8 = 0x66;
+
+// Temperature
+pub const CMD_INT_TEMPERATURE: u8 = 0x68;
+pub const CMD_CFETOFF_TEMPERATURE: u8 = 0x6A;
+pub const CMD_DFETOFF_TEMPERATURE: u8 = 0x6C;
+pub const CMD_ALERT_TEMPERATURE: u8 = 0x6E;
+
+pub const CMD_TS1_TEMPERATURE: u8 = 0x70;
+pub const CMD_TS2_TEMPERATURE: u8 = 0x72;
+pub const CMD_TS3_TEMPERATURE: u8 = 0x74;
+
+pub const CMD_HDQ_TEMPERATURE: u8 = 0x76;
+pub const CMD_DCHG_TEMPERATURE: u8 = 0x78;
+pub const CMD_DDSG_TEMPERATURE: u8 = 0x7A;
+
+// FET
+pub const CMD_FET_STATUS: u8 = 0x7F;

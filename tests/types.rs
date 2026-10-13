@@ -305,34 +305,39 @@ fn alarm_status_specific_bits() {
 #[test]
 fn permanent_faults_all_clear() {
     let pf = PermanentFaults::from(0x0000);
-    assert!(!pf.sotf);
-    assert!(!pf.sopt);
-    assert!(!pf.fuse);
-    assert!(!pf.tov);
     assert!(!pf.suv);
-    assert!(!pf.soc);
+    assert!(!pf.sov);
+    assert!(!pf.socc);
+    assert!(!pf.socd);
+    assert!(!pf.sot);
+    assert!(!pf.sotf);
+    assert!(!pf.cudep);
 }
 
 #[test]
 fn permanent_faults_all_set() {
-    let pf = PermanentFaults::from(0x003F);
-    assert!(pf.sotf);
-    assert!(pf.sopt);
-    assert!(pf.fuse);
-    assert!(pf.tov);
+    let pf = PermanentFaults::from(0x00DF);
+
     assert!(pf.suv);
-    assert!(pf.soc);
+    assert!(pf.sov);
+    assert!(pf.socc);
+    assert!(pf.socd);
+    assert!(pf.sot);
+    assert!(pf.sotf);
+    assert!(pf.cudep);
 }
 
 #[test]
 fn permanent_faults_specific_bits() {
-    let pf = PermanentFaults::from(0b0000_0101); // sets sotf and fuse, soc is clear
-    assert!(pf.sotf);
-    assert!(!pf.sopt);
-    assert!(pf.fuse);
-    assert!(!pf.tov);
-    assert!(!pf.suv);
-    assert!(!pf.soc);
+    let pf = PermanentFaults::from(0b0100_0101);
+
+    assert!(pf.suv); // bit 0
+    assert!(!pf.sov); // bit 1
+    assert!(pf.socc); // bit 2
+    assert!(!pf.socd); // bit 3
+    assert!(!pf.sot); // bit 4
+    assert!(pf.sotf); // bit 6
+    assert!(!pf.cudep); // bit 7
 }
 
 #[test]

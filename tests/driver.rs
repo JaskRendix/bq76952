@@ -354,8 +354,8 @@ fn test_get_safety_status_a() {
 fn test_get_alarm_status() {
     let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
         0x10,
-        vec![0x60],
-        vec![0x10, 0x00], // Mock: pf bit set (bit 4 -> 0x0010)
+        vec![0x62],
+        vec![0x10, 0x00],
     )]);
 
     let mut dev = Bq76952::new(&mut i2c, 0x10);
@@ -513,10 +513,9 @@ fn test_get_safety_status_b() {
 
 #[test]
 fn test_get_safety_status_c() {
-    // ptos expects bit 4 (val & 0x0010 != 0)
     let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
         0x10,
-        vec![0x06],
+        vec![0x07],
         vec![0x08, 0x00],
     )]);
 
@@ -557,8 +556,8 @@ fn test_enter_shutdown_mode() {
 fn test_get_permanent_faults() {
     let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
         0x10,
-        vec![0x6E],
-        vec![0x01, 0x00],
+        vec![0x0B],
+        vec![0x40, 0x00],
     )]);
 
     let mut dev = Bq76952::new(&mut i2c, 0x10);

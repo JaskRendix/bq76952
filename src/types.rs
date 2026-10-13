@@ -262,26 +262,41 @@ impl From<u16> for SafetyStatusB {
     }
 }
 
-/// Permanent Fault Status flags (Thermal Runaway, Permanent Overcurrent, Fuse Blow, etc.)
+/// Permanent Fault Status A flags
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PermanentFaults {
-    pub sotf: bool, // Safety Over Temperature FET
-    pub sopt: bool, // Safety Over Power / Temperature
-    pub fuse: bool, // Fuse blown / triggered
-    pub tov: bool,  // Permanent Cell Overvoltage
-    pub suv: bool,  // Permanent Cell Undervoltage
-    pub soc: bool,  // Permanent Overcurrent
+    /// Safety Cell Undervoltage Permanent Fail
+    pub suv: bool,
+
+    /// Safety Cell Overvoltage Permanent Fail
+    pub sov: bool,
+
+    /// Safety Overcurrent in Charge Permanent Fail
+    pub socc: bool,
+
+    /// Safety Overcurrent in Discharge Permanent Fail
+    pub socd: bool,
+
+    /// Safety Overtemperature Permanent Fail
+    pub sot: bool,
+
+    /// Safety Overtemperature FET Permanent Fail
+    pub sotf: bool,
+
+    /// Copper Deposition Permanent Fail
+    pub cudep: bool,
 }
 
 impl From<u16> for PermanentFaults {
     fn from(val: u16) -> Self {
         Self {
-            sotf: (val & 0x0001) != 0,
-            sopt: (val & 0x0002) != 0,
-            fuse: (val & 0x0004) != 0,
-            tov: (val & 0x0008) != 0,
-            suv: (val & 0x0010) != 0,
-            soc: (val & 0x0020) != 0,
+            suv: (val & 0x0001) != 0,
+            sov: (val & 0x0002) != 0,
+            socc: (val & 0x0004) != 0,
+            socd: (val & 0x0008) != 0,
+            sot: (val & 0x0010) != 0,
+            sotf: (val & 0x0040) != 0,
+            cudep: (val & 0x0080) != 0,
         }
     }
 }

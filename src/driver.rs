@@ -156,18 +156,18 @@ where
             return Err(Error::InvalidParameter);
         }
 
-        let cmd = 0x14 + (cell_number - 1) * 2;
+        let cmd = CMD_CELL1_VOLTAGE + (cell_number - 1) * 2;
         self.direct_command(cmd)
     }
 
     /// Get stack voltage
     pub fn get_stack_voltage(&mut self) -> Result<u16, Error<E>> {
-        self.direct_command(0x34)
+        self.direct_command(CMD_STACK_VOLTAGE)
     }
 
     /// Get current (mA)
     pub fn get_current(&mut self) -> Result<i16, Error<E>> {
-        Ok(self.direct_command(0x3A)? as i16)
+        Ok(self.direct_command(CMD_CC2_CURRENT)? as i16)
     }
 
     /// Set Cell Overvoltage Protection limits
@@ -217,18 +217,19 @@ where
 
     /// Get internal die temperature
     pub fn get_internal_temperature(&mut self) -> Result<i16, Error<E>> {
-        self.direct_command(0x68).map(|val| val as i16)
+        self.direct_command(CMD_INT_TEMPERATURE)
+            .map(|val| val as i16)
     }
 
     /// Get a thermistor temperature reading
     pub fn get_temperature(&mut self, thermistor: Thermistor) -> Result<i16, Error<E>> {
         let cmd = match thermistor {
-            Thermistor::Ts1 => 0x70,
-            Thermistor::Ts2 => 0x72,
-            Thermistor::Ts3 => 0x74,
-            Thermistor::Hdq => 0x76,
-            Thermistor::Dchg => 0x78,
-            Thermistor::Ddsg => 0x7A,
+            Thermistor::Ts1 => CMD_TS1_TEMPERATURE,
+            Thermistor::Ts2 => CMD_TS2_TEMPERATURE,
+            Thermistor::Ts3 => CMD_TS3_TEMPERATURE,
+            Thermistor::Hdq => CMD_HDQ_TEMPERATURE,
+            Thermistor::Dchg => CMD_DCHG_TEMPERATURE,
+            Thermistor::Ddsg => CMD_DDSG_TEMPERATURE,
         };
 
         self.direct_command(cmd).map(|val| val as i16)
@@ -236,7 +237,7 @@ where
 
     /// Read Battery Status flags
     pub fn get_battery_status(&mut self) -> Result<BatteryStatus, Error<E>> {
-        let raw = self.direct_command(0x12)?;
+        let raw = self.direct_command(CMD_BATTERY_STATUS)?;
         Ok(BatteryStatus::from(raw))
     }
 
@@ -258,25 +259,25 @@ where
         Ok(voltages)
     }
 
-    /// Get Minimum Cell Voltage (Direct command 0x58 or similar depending on map)
+    /// Get Minimum Cell Voltage (Direct command CMD_MIN_CELL_VOLTAGE or similar depending on map)
     pub fn get_min_cell_voltage(&mut self) -> Result<u16, Error<E>> {
-        self.direct_command(0x58)
+        self.direct_command(CMD_MIN_CELL_VOLTAGE)
     }
 
     /// Get Maximum Cell Voltage
     pub fn get_max_cell_voltage(&mut self) -> Result<u16, Error<E>> {
-        self.direct_command(0x5A)
+        self.direct_command(CMD_MAX_CELL_VOLTAGE)
     }
 
     /// Read and parse Safety Status A flags
     pub fn get_safety_status_a(&mut self) -> Result<SafetyStatusA, Error<E>> {
-        let raw = self.direct_command(0x03)?;
+        let raw = self.direct_command(CMD_SAFETY_STATUS_A)?;
         Ok(SafetyStatusA::from(raw))
     }
 
     /// Read and parse Alarm Status flags
     pub fn get_alarm_status(&mut self) -> Result<AlarmStatus, Error<E>> {
-        let raw = self.direct_command(0x60)?;
+        let raw = self.direct_command(CMD_ALARM_STATUS)?;
         Ok(AlarmStatus::from(raw))
     }
 
@@ -299,15 +300,15 @@ where
         Ok(status.security_state)
     }
 
-    /// Read and parse Safety Status B flags (Register 0x05)
+    /// Read and parse Safety Status B flags (Register CMD_SAFETY_STATUS_B)
     pub fn get_safety_status_b(&mut self) -> Result<SafetyStatusB, Error<E>> {
-        let raw = self.direct_command(0x05)?;
+        let raw = self.direct_command(CMD_SAFETY_STATUS_B)?;
         Ok(SafetyStatusB::from(raw))
     }
 
-    /// Read and parse Safety Status C flags (Register 0x06)
+    /// Read and parse Safety Status C flags (Register CMD_SAFETY_STATUS_C)
     pub fn get_safety_status_c(&mut self) -> Result<SafetyStatusC, Error<E>> {
-        let raw = self.direct_command(0x06)?;
+        let raw = self.direct_command(CMD_SAFETY_STATUS_C)?;
         Ok(SafetyStatusC::from(raw))
     }
 
@@ -329,7 +330,7 @@ where
 
     /// Read and parse Permanent Faults status flags
     pub fn get_permanent_faults(&mut self) -> Result<PermanentFaults, Error<E>> {
-        let raw = self.direct_command(0x6E)?; // Register 0x6E / standard PF status location
+        let raw = self.direct_command(CMD_PF_STATUS_A)?;
         Ok(PermanentFaults::from(raw))
     }
 
