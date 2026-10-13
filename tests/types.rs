@@ -70,12 +70,13 @@ fn safety_alert_specific_bits() {
 
 #[test]
 fn safety_status_c_parsing() {
-    let s = SafetyStatusC::from(0x00F8);
+    let s = SafetyStatusC::from(0x00F6);
     assert!(s.ocd3);
     assert!(s.scdl);
     assert!(s.ocdl);
     assert!(s.covl);
-    assert!(s.ptos);
+    assert!(s.pto);
+    assert!(s.hwdf);
 }
 
 #[test]
@@ -255,7 +256,7 @@ fn safety_status_a_all_clear() {
 
 #[test]
 fn safety_status_a_all_set() {
-    let s = SafetyStatusA::from(0x003F);
+    let s = SafetyStatusA::from(0x00FC);
     assert!(s.cuv);
     assert!(s.cov);
     assert!(s.occ);
@@ -267,7 +268,7 @@ fn safety_status_a_all_set() {
 #[test]
 fn safety_status_a_specific_bits() {
     // cuv + occ + ocd2
-    let s = SafetyStatusA::from(0b0001_0101);
+    let s = SafetyStatusA::from(0b0101_0100);
     assert!(s.cuv);
     assert!(!s.cov);
     assert!(s.occ);
@@ -422,7 +423,7 @@ fn battery_status_random_values() {
 
 #[test]
 fn safety_alert_vs_status_c_consistency() {
-    let raw8: u8 = 0b1111_1000;
+    let raw8: u8 = 0b1111_0000;
     let raw16: u16 = raw8 as u16;
 
     let a = SafetyAlertC::from(raw8);
@@ -432,5 +433,4 @@ fn safety_alert_vs_status_c_consistency() {
     assert_eq!(a.scdl, s.scdl);
     assert_eq!(a.ocdl, s.ocdl);
     assert_eq!(a.covl, s.covl);
-    assert_eq!(a.ptos, s.ptos);
 }

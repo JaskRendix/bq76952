@@ -107,13 +107,15 @@ impl From<u8> for SafetyAlertC {
     }
 }
 
+/// Safety Status C flags
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SafetyStatusC {
     pub ocd3: bool,
     pub scdl: bool,
     pub ocdl: bool,
     pub covl: bool,
-    pub ptos: bool,
+    pub pto: bool,
+    pub hwdf: bool,
 }
 
 impl From<u16> for SafetyStatusC {
@@ -123,7 +125,8 @@ impl From<u16> for SafetyStatusC {
             scdl: (val & 0x0040) != 0,
             ocdl: (val & 0x0020) != 0,
             covl: (val & 0x0010) != 0,
-            ptos: (val & 0x0008) != 0,
+            pto: (val & 0x0004) != 0,
+            hwdf: (val & 0x0002) != 0,
         }
     }
 }
@@ -208,12 +211,12 @@ pub struct SafetyStatusA {
 impl From<u16> for SafetyStatusA {
     fn from(val: u16) -> Self {
         Self {
-            cuv: (val & 0x0001) != 0,
-            cov: (val & 0x0002) != 0,
-            occ: (val & 0x0004) != 0,
-            ocd1: (val & 0x0008) != 0,
-            ocd2: (val & 0x0010) != 0,
-            scd: (val & 0x0020) != 0,
+            cuv: (val & 0x0004) != 0,
+            cov: (val & 0x0008) != 0,
+            occ: (val & 0x0010) != 0,
+            ocd1: (val & 0x0020) != 0,
+            ocd2: (val & 0x0040) != 0,
+            scd: (val & 0x0080) != 0,
         }
     }
 }

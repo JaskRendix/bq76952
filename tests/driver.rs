@@ -341,7 +341,7 @@ fn test_get_safety_status_a() {
     let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
         0x10,
         vec![0x03],
-        vec![0x04, 0x00], // Mock: OCC bit set (bit 2 -> 0x0004)
+        vec![0x10, 0x00],
     )]);
 
     let mut dev = Bq76952::new(&mut i2c, 0x10);
@@ -517,12 +517,12 @@ fn test_get_safety_status_c() {
     let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
         0x10,
         vec![0x07],
-        vec![0x08, 0x00],
+        vec![0x04, 0x00],
     )]);
 
     let mut dev = Bq76952::new(&mut i2c, 0x10);
     let status = dev.get_safety_status_c().unwrap();
-    assert!(status.ptos);
+    assert!(status.pto);
     i2c.done();
 }
 
