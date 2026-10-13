@@ -197,7 +197,7 @@ impl From<u16> for BatteryStatus {
     }
 }
 
-/// Safety Status A flags (CUV, COV, OCC, OCD1, OCD2, SCD, etc.)
+/// Safety Status A flags.etc.)
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SafetyStatusA {
     pub cuv: bool,
@@ -221,22 +221,22 @@ impl From<u16> for SafetyStatusA {
     }
 }
 
-/// Alarm Status flags
+/// Alarm Status register flags
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct AlarmStatus {
-    pub safety_alert: bool,
-    pub safety_status: bool,
-    pub pf: bool,
-    pub full_scan: bool,
+    pub ssbc: bool,      // Safety Status B or Safety Status C contains an active fault
+    pub ssa: bool,       // Safety Status A contains an active fault
+    pub pf: bool,        // Permanent Fail fault has triggered
+    pub full_scan: bool, // Full voltage scan completed
 }
 
 impl From<u16> for AlarmStatus {
     fn from(val: u16) -> Self {
         Self {
-            safety_alert: (val & 0x4000) != 0,  // SSA
-            safety_status: (val & 0x8000) != 0, // SSBC
-            pf: (val & 0x2000) != 0,            // PF
-            full_scan: (val & 0x0080) != 0,     // FULLSCAN
+            ssbc: (val & 0x8000) != 0,      // Bit 15: Safety Status B/C
+            ssa: (val & 0x4000) != 0,       // Bit 14: Safety Status A
+            pf: (val & 0x2000) != 0,        // Bit 13: Permanent Fail
+            full_scan: (val & 0x0080) != 0, // Bit 7: Full voltage scan complete
         }
     }
 }

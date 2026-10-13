@@ -28,7 +28,6 @@ fn protection_all_bits_set() {
 
 #[test]
 fn protection_specific_bits() {
-    // Matches: sc_dchg (bit 0), oc2_dchg (bit 1), oc_chg (bit 3), cell_uv (bit 5)
     let p = Protection::from(0b1101_0100);
     assert!(p.sc_dchg);
     assert!(p.oc2_dchg);
@@ -280,8 +279,8 @@ fn safety_status_a_specific_bits() {
 #[test]
 fn alarm_status_all_clear() {
     let a = AlarmStatus::from(0x0000);
-    assert!(!a.safety_alert);
-    assert!(!a.safety_status);
+    assert!(!a.ssbc);
+    assert!(!a.ssa);
     assert!(!a.pf);
     assert!(!a.full_scan);
 }
@@ -289,8 +288,8 @@ fn alarm_status_all_clear() {
 #[test]
 fn alarm_status_all_set() {
     let a = AlarmStatus::from(0xE080);
-    assert!(a.safety_alert);
-    assert!(a.safety_status);
+    assert!(a.ssbc);
+    assert!(a.ssa);
     assert!(a.pf);
     assert!(a.full_scan);
 }
@@ -298,8 +297,8 @@ fn alarm_status_all_set() {
 #[test]
 fn alarm_status_specific_bits() {
     let a = AlarmStatus::from(0x4000); // Only safety_alert set
-    assert!(a.safety_alert);
-    assert!(!a.safety_status);
+    assert!(!a.ssbc);
+    assert!(a.ssa);
     assert!(!a.pf);
     assert!(!a.full_scan);
 }
