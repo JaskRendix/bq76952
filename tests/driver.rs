@@ -245,6 +245,34 @@ fn test_get_temperature_ts1() {
 }
 
 #[test]
+fn test_get_cell_voltage_invalid_cell() {
+    let mut i2c = I2cMock::new(&[]);
+
+    let mut dev = Bq76952::new(&mut i2c, 0x10);
+
+    assert!(matches!(
+        dev.get_cell_voltage(0),
+        Err(Error::InvalidParameter)
+    ));
+
+    i2c.done();
+}
+
+#[test]
+fn test_get_cell_voltage_invalid_cell_high() {
+    let mut i2c = I2cMock::new(&[]);
+
+    let mut dev = Bq76952::new(&mut i2c, 0x10);
+
+    assert!(matches!(
+        dev.get_cell_voltage(17),
+        Err(Error::InvalidParameter)
+    ));
+
+    i2c.done();
+}
+
+#[test]
 fn test_get_battery_status() {
     // Direct command 0x12 returning a mock status word
     let mut i2c = I2cMock::new(&[I2cTransaction::write_read(

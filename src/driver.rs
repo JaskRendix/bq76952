@@ -63,6 +63,7 @@ where
             .map_err(Error::I2c)
     }
 
+    /// Read a single byte from data memory.
     pub fn read_data_memory_u8(&mut self, addr: u16) -> Result<u8, Error<E>> {
         self.select_data_memory(addr)?;
 
@@ -73,6 +74,7 @@ where
         Ok(buf[0])
     }
 
+    /// Read a 16-bit value from data memory.
     pub fn read_data_memory_u16(&mut self, addr: u16) -> Result<u16, Error<E>> {
         self.select_data_memory(addr)?;
 
@@ -150,6 +152,10 @@ where
 
     /// Get individual cell voltage (cell_number 1..16)
     pub fn get_cell_voltage(&mut self, cell_number: u8) -> Result<u16, Error<E>> {
+        if !(1..=16).contains(&cell_number) {
+            return Err(Error::InvalidParameter);
+        }
+
         let cmd = 0x14 + (cell_number - 1) * 2;
         self.direct_command(cmd)
     }
@@ -220,8 +226,11 @@ where
             Thermistor::Ts1 => 0x70,
             Thermistor::Ts2 => 0x72,
             Thermistor::Ts3 => 0x74,
-            _ => 0x70, // Fallback or handle other variants if needed
+            Thermistor::Hdq => 0x76,
+            Thermistor::Dchg => 0x78,
+            Thermistor::Ddsg => 0x7A,
         };
+
         self.direct_command(cmd).map(|val| val as i16)
     }
 

@@ -8,4 +8,6 @@ pub enum Error<E> {
     ChecksumMismatch,
     /// Invalid configuration parameter provided
     InvalidConfiguration,
+    /// Invalid runtime parameter provided by caller
+    InvalidParameter,
 }
