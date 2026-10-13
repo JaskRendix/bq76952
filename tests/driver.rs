@@ -304,7 +304,6 @@ fn test_unseal() {
 fn test_get_all_cell_voltages() {
     // Mock 16 consecutive cell voltage reads (0x14 through 0x32)
     let mut transactions = Vec::new();
-    #[allow(clippy::needless_range_loop)]
     for i in 0..16 {
         let cmd = 0x14 + (i * 2);
         transactions.push(I2cTransaction::write_read(

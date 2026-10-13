@@ -250,10 +250,11 @@ where
     /// Read all 16 cell voltages into a fixed-size array at once
     pub fn get_all_cell_voltages(&mut self) -> Result<[u16; 16], Error<E>> {
         let mut voltages = [0u16; 16];
-        #[allow(clippy::needless_range_loop)]
-        for i in 0..16 {
-            voltages[i] = self.get_cell_voltage((i + 1) as u8)?;
+
+        for (i, voltage) in voltages.iter_mut().enumerate() {
+            *voltage = self.get_cell_voltage((i + 1) as u8)?;
         }
+
         Ok(voltages)
     }
 

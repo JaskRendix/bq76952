@@ -1,7 +1,5 @@
 //! BQ76952 Register Addresses, Subcommands, and Constants
 
-#![allow(dead_code)]
-
 // ======= BQ76952 Direct Commands / Regulators / Alerts =======
 pub const REG0_CONFIG: u16 = 0x9237;
 pub const REG12_CONTROL: u16 = 0x9236;

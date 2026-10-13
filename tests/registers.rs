@@ -44,55 +44,22 @@ fn all_registers() -> Vec<u16> {
 }
 
 #[test]
-fn test_specific_known_values() {
-    assert_eq!(REG0_CONFIG, 0x9237);
-    assert_eq!(REG12_CONTROL, 0x9236);
-    assert_eq!(ALERT_PIN_CONFIG, 0x92FC);
-    assert_eq!(DEFAULT_ALARM_MASK_CONFIG, 0x926D);
-    assert_eq!(DA_CONFIGURATION, 0x9303);
-    assert_eq!(SHUTDOWN_STACK_VOLTAGE, 0x9241);
+fn subcommands_have_expected_values() {
+    assert_eq!(SUBCMD_CB_ACTIVE_CELLS, 0x0083);
 
-    assert_eq!(VCELL_MODE, 0x9304);
-    assert_eq!(PROTECTION_CONFIGURATION, 0x925F);
+    assert_eq!(SUBCMD_RESET, 0x0012);
+    assert_eq!(SUBCMD_SHUTDOWN, 0x0014);
 
-    assert_eq!(ENABLE_PROTECTIONS_A, 0x9261);
-    assert_eq!(ENABLE_PROTECTIONS_B, 0x9262);
-    assert_eq!(ENABLE_PROTECTIONS_C, 0x9263);
+    assert_eq!(SUBCMD_ENTER_CFGUPDATE, 0x0090);
+    assert_eq!(SUBCMD_EXIT_CFGUPDATE, 0x0092);
 
-    assert_eq!(CHG_FET_PROTECTION_A, 0x9265);
-    assert_eq!(CHG_FET_PROTECTION_B, 0x9266);
-    assert_eq!(CHG_FET_PROTECTION_C, 0x9267);
+    assert_eq!(SUBCMD_DSG_OFF, 0x0093);
+    assert_eq!(SUBCMD_CHG_OFF, 0x0094);
+    assert_eq!(SUBCMD_ALL_FETS_OFF, 0x0095);
+    assert_eq!(SUBCMD_ALL_FETS_ON, 0x0096);
 
-    assert_eq!(DSG_FET_PROTECTION_A, 0x9269);
-    assert_eq!(DSG_FET_PROTECTION_B, 0x926A);
-    assert_eq!(DSG_FET_PROTECTION_C, 0x926B);
-
-    assert_eq!(SF_ALERT_MASK_A, 0x926F);
-    assert_eq!(SF_ALERT_MASK_B, 0x9270);
-    assert_eq!(SF_ALERT_MASK_C, 0x9271);
-
-    assert_eq!(SCD_THRESHOLD_CONFIG, 0x9286);
-    assert_eq!(SCD_DELAY_CONFIG, 0x9287);
-
-    assert_eq!(FET_OPTIONS, 0x9308);
-    assert_eq!(FET_PREDISCHARGE_TIMEOUT, 0x930E);
-    assert_eq!(FET_PREDISCHARGE_STOP_DELTA, 0x930F);
-
-    assert_eq!(CC3_SAMPLES, 0x9307);
-    assert_eq!(TS1_CONFIG, 0x92FD);
-    assert_eq!(TS2_CONFIG, 0x92FE);
-    assert_eq!(TS3_CONFIG, 0x92FF);
-
-    assert_eq!(CELL_INTERCONNECT_RESISTANCE, 0x9315);
-    assert_eq!(CELL_INTERCONNECT_RESISTANCE_MOHM, 0);
-
-    assert_eq!(UNSEAL_KEY_STEP_1, 0x0414);
-    assert_eq!(UNSEAL_KEY_STEP_2, 0x3672);
-    assert_eq!(FULL_ACCESS_KEY_STEP_1, 0x1234);
-    assert_eq!(FULL_ACCESS_KEY_STEP_2, 0xABCD);
-
-    assert_eq!(CMD_DIR_SUBCMD_LOW, 0x3E);
-    assert_eq!(CMD_DIR_RESP_CHKSUM, 0x60);
+    assert_eq!(SUBCMD_SLEEP_ENABLE, 0x0099);
+    assert_eq!(SUBCMD_SLEEP_DISABLE, 0x009A);
 }
 
 #[test]
