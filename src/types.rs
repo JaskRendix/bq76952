@@ -131,27 +131,28 @@ impl From<u16> for SafetyStatusC {
     }
 }
 
+/// Safety Alert B flags
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct TemperatureProtection {
-    pub overtemp_fet: bool,
-    pub overtemp_internal: bool,
-    pub overtemp_dchg: bool,
-    pub overtemp_chg: bool,
-    pub undertemp_internal: bool,
-    pub undertemp_dchg: bool,
-    pub undertemp_chg: bool,
+pub struct SafetyAlertB {
+    pub otf: bool,
+    pub otint: bool,
+    pub otd: bool,
+    pub otc: bool,
+    pub utint: bool,
+    pub utd: bool,
+    pub utc: bool,
 }
 
-impl From<u8> for TemperatureProtection {
+impl From<u8> for SafetyAlertB {
     fn from(val: u8) -> Self {
         Self {
-            overtemp_fet: (val & 0x01) != 0,
-            overtemp_internal: (val & 0x02) != 0,
-            overtemp_dchg: (val & 0x04) != 0,
-            overtemp_chg: (val & 0x08) != 0,
-            undertemp_internal: (val & 0x10) != 0,
-            undertemp_dchg: (val & 0x20) != 0,
-            undertemp_chg: (val & 0x40) != 0,
+            otf: (val & 0x80) != 0,
+            otint: (val & 0x40) != 0,
+            otd: (val & 0x20) != 0,
+            otc: (val & 0x10) != 0,
+            utint: (val & 0x04) != 0,
+            utd: (val & 0x02) != 0,
+            utc: (val & 0x01) != 0,
         }
     }
 }

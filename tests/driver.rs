@@ -598,3 +598,19 @@ fn test_get_fet_status() {
 
     i2c.done();
 }
+
+#[test]
+fn test_get_safety_alert_b() {
+    let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
+        0x10,
+        vec![0x04],
+        vec![0x80, 0x00], // OTF set
+    )]);
+
+    let mut dev = Bq76952::new(&mut i2c, 0x10);
+    let alert = dev.get_safety_alert_b().unwrap();
+
+    assert!(alert.otf);
+
+    i2c.done();
+}

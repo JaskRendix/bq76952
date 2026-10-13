@@ -1,7 +1,7 @@
 use bq76952::{
     AlarmStatus, BatteryStatus, Fet, FetState, FetStatus, PermanentFaults, Protection,
-    SafetyAlertC, SafetyStatusA, SafetyStatusB, SafetyStatusC, ScdThreshold, SecurityState,
-    TemperatureProtection, Thermistor,
+    SafetyAlertB, SafetyAlertC, SafetyStatusA, SafetyStatusB, SafetyStatusC, ScdThreshold,
+    SecurityState, Thermistor,
 };
 
 #[test]
@@ -92,40 +92,42 @@ fn safety_status_b_parsing() {
 }
 
 #[test]
-fn temp_protection_all_clear() {
-    let t = TemperatureProtection::from(0x00);
-    assert!(!t.overtemp_fet);
-    assert!(!t.overtemp_internal);
-    assert!(!t.overtemp_dchg);
-    assert!(!t.overtemp_chg);
-    assert!(!t.undertemp_internal);
-    assert!(!t.undertemp_dchg);
-    assert!(!t.undertemp_chg);
+fn safety_alert_b_all_clear() {
+    let t = SafetyAlertB::from(0x00);
+
+    assert!(!t.otf);
+    assert!(!t.otint);
+    assert!(!t.otd);
+    assert!(!t.otc);
+    assert!(!t.utint);
+    assert!(!t.utd);
+    assert!(!t.utc);
 }
 
 #[test]
-fn temp_protection_all_set() {
-    let t = TemperatureProtection::from(0xFF);
-    assert!(t.overtemp_fet);
-    assert!(t.overtemp_internal);
-    assert!(t.overtemp_dchg);
-    assert!(t.overtemp_chg);
-    assert!(t.undertemp_internal);
-    assert!(t.undertemp_dchg);
-    assert!(t.undertemp_chg);
+fn safety_alert_b_all_set() {
+    let t = SafetyAlertB::from(0xFF);
+
+    assert!(t.otf);
+    assert!(t.otint);
+    assert!(t.otd);
+    assert!(t.otc);
+    assert!(t.utint);
+    assert!(t.utd);
+    assert!(t.utc);
 }
 
 #[test]
-fn temp_protection_specific_bits() {
-    // Matches: overtemp_fet (bit 0), overtemp_internal (bit 1), overtemp_chg (bit 3), undertemp_dchg (bit 5)
-    let t = TemperatureProtection::from(0b0010_1011);
-    assert!(t.overtemp_fet);
-    assert!(t.overtemp_internal);
-    assert!(!t.overtemp_dchg);
-    assert!(t.overtemp_chg);
-    assert!(!t.undertemp_internal);
-    assert!(t.undertemp_dchg);
-    assert!(!t.undertemp_chg);
+fn safety_alert_b_specific_bits() {
+    let t = SafetyAlertB::from(0b1010_0101);
+
+    assert!(t.otf); // bit 7
+    assert!(!t.otint); // bit 6
+    assert!(t.otd); // bit 5
+    assert!(!t.otc); // bit 4
+    assert!(t.utint); // bit 2
+    assert!(!t.utd); // bit 1
+    assert!(t.utc); // bit 0
 }
 
 #[test]

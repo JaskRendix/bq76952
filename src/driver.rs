@@ -300,6 +300,12 @@ where
         Ok(status.security_state)
     }
 
+    /// Read and parse Safety Alert B flags
+    pub fn get_safety_alert_b(&mut self) -> Result<SafetyAlertB, Error<E>> {
+        let raw = self.direct_command(CMD_SAFETY_ALERT_B)? as u8;
+        Ok(SafetyAlertB::from(raw))
+    }
+
     /// Read and parse Safety Status B flags (Register CMD_SAFETY_STATUS_B)
     pub fn get_safety_status_b(&mut self) -> Result<SafetyStatusB, Error<E>> {
         let raw = self.direct_command(CMD_SAFETY_STATUS_B)?;
