@@ -90,7 +90,7 @@ where
         &mut self,
         addr: u16,
         data: u16,
-        no_bytes: u8,
+        byte_count: u8,
     ) -> Result<(), Error<E>> {
         let addr_l = (addr & 0xFF) as u8;
         let addr_h = ((addr >> 8) & 0xFF) as u8;
@@ -101,7 +101,7 @@ where
         chk = Self::calculate_checksum(chk, addr_l);
         chk = Self::calculate_checksum(chk, addr_h);
         chk = Self::calculate_checksum(chk, data_l);
-        if no_bytes == 2 {
+        if byte_count == 2 {
             chk = Self::calculate_checksum(chk, data_h);
         }
 
@@ -114,7 +114,7 @@ where
         write_buf[1] = addr_l;
         write_buf[2] = addr_h;
         write_buf[3] = data_l;
-        let len = if no_bytes == 2 {
+        let len = if byte_count == 2 {
             write_buf[4] = data_h;
             5
         } else {
@@ -128,7 +128,7 @@ where
         let check_buf = [
             CMD_DIR_RESP_CHKSUM,
             chk,
-            if no_bytes == 1 { 0x05 } else { 0x06 },
+            if byte_count == 1 { 0x05 } else { 0x06 },
         ];
         self.i2c
             .write(self.address, &check_buf)
@@ -287,7 +287,7 @@ where
         Ok((raw as f32 - 2731.5) / 10.0)
     }
 
-    /// Get thermistor temperature (TS1, TS2, TS3) in degrees Celsius (f32)
+    /// Get thermistor temperature in degrees Celsius (f32).
     pub fn get_temperature_celsius(&mut self, thermistor: Thermistor) -> Result<f32, Error<E>> {
         let raw = self.get_temperature(thermistor)?;
         Ok((raw as f32 - 2731.5) / 10.0)
