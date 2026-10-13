@@ -147,7 +147,7 @@ where
 
     /// Check connection status via device number direct command
     pub fn is_connected(&mut self) -> bool {
-        self.direct_command(0x01).is_ok()
+        self.direct_command(CMD_DEVICE_NUMBER).is_ok()
     }
 
     /// Get individual cell voltage (cell_number 1..16)
@@ -175,8 +175,8 @@ where
         let thresh = (mv as f32 / 50.6).clamp(20.0, 110.0) as u8;
         let dly = ((ms as f32 / 3.3) - 2.0).clamp(1.0, 2047.0) as u16;
 
-        self.write_data_memory(0x9278, thresh as u16, 1)?;
-        self.write_data_memory(0x9279, dly, 2)?;
+        self.write_data_memory(COV_THRESHOLD, thresh as u16, 1)?;
+        self.write_data_memory(COV_DELAY, dly, 2)?;
         Ok(())
     }
 
@@ -185,8 +185,8 @@ where
         let thresh = (mv as f32 / 50.6).clamp(10.0, 90.0) as u8;
         let dly = ((ms as f32 / 3.3) - 2.0).clamp(1.0, 2047.0) as u16;
 
-        self.write_data_memory(0x9275, thresh as u16, 1)?;
-        self.write_data_memory(0x9276, dly, 2)?;
+        self.write_data_memory(CUV_THRESHOLD, thresh as u16, 1)?;
+        self.write_data_memory(CUV_DELAY, dly, 2)?;
         Ok(())
     }
 

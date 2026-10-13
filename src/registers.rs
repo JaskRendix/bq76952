@@ -27,6 +27,14 @@ pub const SF_ALERT_MASK_A: u16 = 0x926F;
 pub const SF_ALERT_MASK_B: u16 = 0x9270;
 pub const SF_ALERT_MASK_C: u16 = 0x9271;
 
+// Cell UV Protection
+pub const CUV_THRESHOLD: u16 = 0x9275;
+pub const CUV_DELAY: u16 = 0x9276;
+
+// Cell OV Protection
+pub const COV_THRESHOLD: u16 = 0x9278;
+pub const COV_DELAY: u16 = 0x9279;
+
 pub const SCD_THRESHOLD_CONFIG: u16 = 0x9286;
 pub const SCD_DELAY_CONFIG: u16 = 0x9287;
 pub const FET_OPTIONS: u16 = 0x9308;
@@ -76,6 +84,7 @@ pub const SUBCMD_SLEEP_DISABLE: u16 = 0x009A;
 
 // Status
 pub const CMD_CONTROL_STATUS: u8 = 0x00;
+pub const CMD_DEVICE_NUMBER: u8 = 0x01;
 
 pub const CMD_SAFETY_ALERT_A: u8 = 0x02;
 pub const CMD_SAFETY_STATUS_A: u8 = 0x03;
