@@ -288,7 +288,7 @@ fn alarm_status_all_clear() {
 
 #[test]
 fn alarm_status_all_set() {
-    let a = AlarmStatus::from(0x0033);
+    let a = AlarmStatus::from(0xE080);
     assert!(a.safety_alert);
     assert!(a.safety_status);
     assert!(a.pf);
@@ -297,7 +297,7 @@ fn alarm_status_all_set() {
 
 #[test]
 fn alarm_status_specific_bits() {
-    let a = AlarmStatus::from(0b0000_0001); // Only safety_alert set
+    let a = AlarmStatus::from(0x4000); // Only safety_alert set
     assert!(a.safety_alert);
     assert!(!a.safety_status);
     assert!(!a.pf);

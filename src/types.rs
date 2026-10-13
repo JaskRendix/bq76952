@@ -233,10 +233,10 @@ pub struct AlarmStatus {
 impl From<u16> for AlarmStatus {
     fn from(val: u16) -> Self {
         Self {
-            safety_alert: (val & 0x0001) != 0,
-            safety_status: (val & 0x0002) != 0,
-            pf: (val & 0x0010) != 0,
-            full_scan: (val & 0x0020) != 0,
+            safety_alert: (val & 0x4000) != 0,  // SSA
+            safety_status: (val & 0x8000) != 0, // SSBC
+            pf: (val & 0x2000) != 0,            // PF
+            full_scan: (val & 0x0080) != 0,     // FULLSCAN
         }
     }
 }

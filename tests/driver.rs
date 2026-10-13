@@ -355,12 +355,14 @@ fn test_get_alarm_status() {
     let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
         0x10,
         vec![0x62],
-        vec![0x10, 0x00],
+        vec![0x00, 0x20],
     )]);
 
     let mut dev = Bq76952::new(&mut i2c, 0x10);
     let alarm = dev.get_alarm_status().unwrap();
+
     assert!(alarm.pf);
+
     i2c.done();
 }
 
