@@ -106,7 +106,7 @@ where
         }
 
         // Enter configuration update mode first
-        self.sub_command(0x0090)?;
+        self.sub_command(SUBCMD_ENTER_CFGUPDATE)?;
 
         // Write subcommand address and data
         let mut write_buf = [0u8; 5];
@@ -135,14 +135,14 @@ where
             .map_err(Error::I2c)?;
 
         // Exit configuration update mode
-        self.sub_command(0x0092)?;
+        self.sub_command(SUBCMD_EXIT_CFGUPDATE)?;
 
         Ok(())
     }
 
     /// Reset the device
     pub fn reset(&mut self) -> Result<(), Error<E>> {
-        self.sub_command(0x0012)
+        self.sub_command(SUBCMD_RESET)
     }
 
     /// Check connection status via device number direct command
@@ -204,12 +204,12 @@ where
     pub fn set_fet(&mut self, fet: Fet, state: FetState) -> Result<(), Error<E>> {
         let sub_cmd = match state {
             FetState::Off => match fet {
-                Fet::Dch => 0x0093,
-                Fet::Chg => 0x0094,
-                Fet::All => 0x0095,
+                Fet::Dch => SUBCMD_DSG_OFF,
+                Fet::Chg => SUBCMD_CHG_OFF,
+                Fet::All => SUBCMD_ALL_FETS_OFF,
             },
 
-            FetState::On => 0x0096,
+            FetState::On => SUBCMD_ALL_FETS_ON,
         };
 
         self.sub_command(sub_cmd)
@@ -220,7 +220,7 @@ where
         self.direct_command(0x68).map(|val| val as i16)
     }
 
-    /// Get thermistor temperature (TS1, TS2, TS3)
+    /// Get a thermistor temperature reading
     pub fn get_temperature(&mut self, thermistor: Thermistor) -> Result<i16, Error<E>> {
         let cmd = match thermistor {
             Thermistor::Ts1 => 0x70,
@@ -312,19 +312,18 @@ where
 
     /// Request the device to enter Sleep mode
     pub fn enter_sleep_mode(&mut self) -> Result<(), Error<E>> {
-        self.sub_command(0x0099)
+        self.sub_command(SUBCMD_SLEEP_ENABLE)
     }
 
     /// Request the device to exit Sleep mode (wake up)
     pub fn exit_sleep_mode(&mut self) -> Result<(), Error<E>> {
-        self.sub_command(0x009A)
+        self.sub_command(SUBCMD_SLEEP_DISABLE)
     }
 
     /// Request the device to enter Shutdown mode
     pub fn enter_shutdown_mode(&mut self) -> Result<(), Error<E>> {
         // BQ76952 requires sending shutdown command twice or a specific subcommand sequence
-        // Subcommand 0x0014 is Shutdown
-        self.sub_command(0x0014)
+        self.sub_command(SUBCMD_SHUTDOWN)
     }
 
     /// Read and parse Permanent Faults status flags
@@ -333,14 +332,14 @@ where
         Ok(PermanentFaults::from(raw))
     }
 
-    /// Manually enable or configure cell balancing using active cells subcommand (0x0083).
+    /// Manually enable or configure cell balancing using active cells subcommand (SUBCMD_CB_ACTIVE_CELLS).
     /// The BQ76952 expects the 2-byte mask (where bits 0-15 correspond to cells 1-16)
-    /// to be written using the subcommand data registers (`0x3E`/`0x3F`) followed by issuing `0x0083`.
+    /// to be written using the subcommand data registers (`0x3E`/`0x3F`) followed by issuing `SUBCMD_CB_ACTIVE_CELLS`.
     pub fn set_cell_balancing(&mut self, mask: u16) -> Result<(), Error<E>> {
         let low_byte = (mask & 0xFF) as u8;
         let high_byte = ((mask >> 8) & 0xFF) as u8;
 
-        // Write subcommand code (0x0083) and the 2-byte mask payload to the command buffer area
+        // Write subcommand code (SUBCMD_CB_ACTIVE_CELLS) and the 2-byte mask payload to the command buffer area
         let bytes = [
             CMD_DIR_SUBCMD_LOW,
             (SUBCMD_CB_ACTIVE_CELLS & 0xFF) as u8,

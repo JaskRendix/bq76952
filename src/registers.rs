@@ -55,3 +55,21 @@ pub const FULL_ACCESS_KEY_STEP_2: u16 = 0xABCD;
 // ======= Direct Command / Response Registers =======
 pub const CMD_DIR_SUBCMD_LOW: u8 = 0x3E;
 pub const CMD_DIR_RESP_CHKSUM: u8 = 0x60;
+
+// ======= Command-Only Subcommands =======
+pub const SUBCMD_RESET: u16 = 0x0012;
+pub const SUBCMD_SHUTDOWN: u16 = 0x0014;
+
+// Configuration Update
+pub const SUBCMD_ENTER_CFGUPDATE: u16 = 0x0090;
+pub const SUBCMD_EXIT_CFGUPDATE: u16 = 0x0092;
+
+// FET Control
+pub const SUBCMD_DSG_OFF: u16 = 0x0093;
+pub const SUBCMD_CHG_OFF: u16 = 0x0094;
+pub const SUBCMD_ALL_FETS_OFF: u16 = 0x0095;
+pub const SUBCMD_ALL_FETS_ON: u16 = 0x0096;
+
+// Power Modes
+pub const SUBCMD_SLEEP_ENABLE: u16 = 0x0099;
+pub const SUBCMD_SLEEP_DISABLE: u16 = 0x009A;
