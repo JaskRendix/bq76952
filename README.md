@@ -26,7 +26,7 @@ This Rust port provides:
 - compatibility with any `embedded-hal` I²C backend  
 - a fully testable driver using mock I²C interfaces  
 
-The functional behavior matches TI’s reference implementation.
+The implementation follows the behavior and command structure described in the TI documentation.
 
 ---
 
@@ -57,15 +57,17 @@ The driver uses:
 
 It exposes:
 
-- register access  
-- subcommand access  
-- data‑memory read/write  
-- voltage, current, temperature telemetry  
-- protection configuration  
-- permanent fault monitoring  
-- FET and cell‑balancing control  
-- security/unseal handling  
-- sleep/shutdown mode control  
+- register access
+- subcommand access
+- data‑memory read/write
+- voltage, current, and temperature telemetry
+- safety alert and status monitoring
+- permanent fault monitoring
+- battery, alarm, and FET status monitoring
+- protection configuration
+- FET and cell‑balancing control
+- security/unseal handling
+- sleep/shutdown mode control
 
 ---
 
@@ -95,10 +97,14 @@ Supported protection categories:
 
 The driver exposes:
 
-- Safety Status A/B/C  
-- PF Status  
-- threshold and delay configuration  
-- recovery behavior
+- Safety Alert A/B/C
+- Safety Status A/B/C
+- Permanent Fault Status A
+- Alarm Status
+- Battery Status
+- FET Status
+- threshold and delay configuration
+- recovery 
 
 ---
 
@@ -118,10 +124,12 @@ The driver includes unseal key handling and state tracking.
 
 Supported operations:
 
-- Charge FET  
-- Discharge FET  
-- Combined FET control  
+- Charge FET control
+- Discharge FET control
+- Combined FET control
 - Manual cell balancing
+- FET Status monitoring
+- ALERT, DCHG, and DDSG pin status monitoring
 
 ---
 
@@ -150,6 +158,21 @@ The driver provides:
 
 ---
 
+## Status Register Support
+
+The driver provides typed accessors for the following BQ76952 status registers:
+
+- Battery Status
+- Alarm Status
+- Safety Alert A/B/C
+- Safety Status A/B/C
+- Permanent Fault Status A
+- FET Status
+
+All bitfield mappings are implemented according to the TI BQ76952 Technical Reference Manual (SLUUBY2B).
+
+---
+
 ## Examples
 
 - `monitor` — full monitoring loop: voltages, current, temperatures, safety status  
@@ -164,7 +187,7 @@ cargo run --example monitor
 
 ## Documentation
 
-This driver is implemented using the official Texas Instruments documentation for the BQ76952 and follows the command mappings, data-memory architecture, telemetry interfaces, protection mechanisms, and security model described by TI.
+This driver is implemented using the official Texas Instruments BQ76952 documentation and follows the command mappings, direct-command bitfields, data-memory architecture, telemetry interfaces, protection mechanisms, permanent-fault model, FET control interfaces, and security model described by TI.
 
 ### References
 
