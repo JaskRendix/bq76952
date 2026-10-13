@@ -68,28 +68,32 @@ fn test_subcommand_error() {
 }
 
 #[test]
-fn test_read_data_memory_1_byte() {
+fn test_read_data_memory_u8() {
     let mut i2c = I2cMock::new(&[
         I2cTransaction::write(0x10, vec![0x3E, 0x78, 0x56]),
         I2cTransaction::read(0x10, vec![0xAB]),
     ]);
 
     let mut dev = Bq76952::new(&mut i2c, 0x10);
-    let val = dev.read_data_memory(0x5678, 1).unwrap();
+    let val = dev.read_data_memory_u8(0x5678).unwrap();
+
     assert_eq!(val, 0xAB);
+
     i2c.done();
 }
 
 #[test]
-fn test_read_data_memory_2_bytes() {
+fn test_read_data_memory_u16() {
     let mut i2c = I2cMock::new(&[
         I2cTransaction::write(0x10, vec![0x3E, 0x78, 0x56]),
         I2cTransaction::read(0x10, vec![0xCD, 0xAB]),
     ]);
 
     let mut dev = Bq76952::new(&mut i2c, 0x10);
-    let val = dev.read_data_memory(0x5678, 2).unwrap();
+    let val = dev.read_data_memory_u16(0x5678).unwrap();
+
     assert_eq!(val, 0xABCD);
+
     i2c.done();
 }
 
@@ -330,22 +334,6 @@ fn test_get_alarm_status() {
     let mut dev = Bq76952::new(&mut i2c, 0x10);
     let alarm = dev.get_alarm_status().unwrap();
     assert!(alarm.pf);
-    i2c.done();
-}
-
-#[test]
-fn test_read_data_memory_invalid_size() {
-    let mut i2c = I2cMock::new(&[
-        I2cTransaction::write(0x10, vec![0x3E, 0x78, 0x56]),
-        I2cTransaction::read(0x10, vec![0xAA, 0xBB]),
-    ]);
-
-    let mut dev = Bq76952::new(&mut i2c, 0x10);
-
-    // Size > 2 still returns 2 bytes (implementation detail)
-    let val = dev.read_data_memory(0x5678, 3).unwrap();
-    assert_eq!(val, 0xBBAA);
-
     i2c.done();
 }
 

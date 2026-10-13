@@ -140,7 +140,7 @@ fn battery_status_all_clear() {
     assert!(!b.wr_to_otp_pending);
     assert!(!b.open_wire_check);
     assert!(!b.wd_was_triggered);
-    assert!(!b.full_reset_occured);
+    assert!(!b.full_reset_occurred);
     assert!(!b.sleep_en_allowed);
     assert!(!b.precharge_mode);
     assert!(!b.config_update_mode);
@@ -159,7 +159,7 @@ fn battery_status_all_set() {
     assert!(b.wr_to_otp_pending);
     assert!(b.open_wire_check);
     assert!(b.wd_was_triggered);
-    assert!(b.full_reset_occured);
+    assert!(b.full_reset_occurred);
     assert!(b.sleep_en_allowed);
     assert!(b.precharge_mode);
     assert!(b.config_update_mode);
@@ -206,7 +206,7 @@ fn battery_status_specific_bits() {
     assert!(b.wr_to_otp_pending);
     assert!(!b.open_wire_check);
     assert!(b.wd_was_triggered);
-    assert!(!b.full_reset_occured);
+    assert!(!b.full_reset_occurred);
     assert!(b.sleep_en_allowed);
     assert!(!b.precharge_mode);
     assert!(b.config_update_mode);

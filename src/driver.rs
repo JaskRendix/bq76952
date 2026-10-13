@@ -51,28 +51,36 @@ where
         self.i2c.write(self.address, &bytes).map_err(Error::I2c)
     }
 
-    /// Read data memory safely with error propagation
-    pub fn read_data_memory(&mut self, addr: u16, size: usize) -> Result<u16, Error<E>> {
+    fn select_data_memory(&mut self, addr: u16) -> Result<(), Error<E>> {
         let addr_bytes = [
             CMD_DIR_SUBCMD_LOW,
             (addr & 0xFF) as u8,
             ((addr >> 8) & 0xFF) as u8,
         ];
+
         self.i2c
             .write(self.address, &addr_bytes)
-            .map_err(Error::I2c)?;
+            .map_err(Error::I2c)
+    }
+
+    pub fn read_data_memory_u8(&mut self, addr: u16) -> Result<u8, Error<E>> {
+        self.select_data_memory(addr)?;
+
+        let mut buf = [0u8; 1];
+
+        self.i2c.read(self.address, &mut buf).map_err(Error::I2c)?;
+
+        Ok(buf[0])
+    }
+
+    pub fn read_data_memory_u16(&mut self, addr: u16) -> Result<u16, Error<E>> {
+        self.select_data_memory(addr)?;
 
         let mut buf = [0u8; 2];
-        let read_size = core::cmp::min(size, buf.len());
-        self.i2c
-            .read(self.address, &mut buf[..read_size])
-            .map_err(Error::I2c)?;
 
-        if size == 1 {
-            Ok(buf[0] as u16)
-        } else {
-            Ok(u16::from_le_bytes(buf))
-        }
+        self.i2c.read(self.address, &mut buf).map_err(Error::I2c)?;
+
+        Ok(u16::from_le_bytes(buf))
     }
 
     /// Write data memory with automatic checksum calculation
