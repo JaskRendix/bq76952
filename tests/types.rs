@@ -80,14 +80,15 @@ fn safety_status_c_parsing() {
 
 #[test]
 fn safety_status_b_parsing() {
-    // Bit 7: OTF, Bit 6: OOT, Bit 5: UTINT, Bit 4: UT_DCHG, Bit 3: UT_CHG, Bit 0: OCD3
-    let s = SafetyStatusB::from(0x00FB);
+    let s = SafetyStatusB::from(0x00F7);
+
     assert!(s.otf);
-    assert!(s.oot);
+    assert!(s.otint);
+    assert!(s.otd);
+    assert!(s.otc);
     assert!(s.utint);
-    assert!(s.ut_dchg);
-    assert!(s.ut_chg);
-    assert!(s.ocd3);
+    assert!(s.utd);
+    assert!(s.utc);
 }
 
 #[test]

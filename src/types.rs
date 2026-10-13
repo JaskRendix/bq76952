@@ -238,26 +238,28 @@ impl From<u16> for AlarmStatus {
     }
 }
 
-/// Safety Status B flags (OTF, OVT, UTINT, UTOT, OCD3, SCDL, etc.)
+/// Safety Status B flags
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SafetyStatusB {
     pub otf: bool,
-    pub oot: bool,
+    pub otint: bool,
+    pub otd: bool,
+    pub otc: bool,
     pub utint: bool,
-    pub ut_dchg: bool,
-    pub ut_chg: bool,
-    pub ocd3: bool,
+    pub utd: bool,
+    pub utc: bool,
 }
 
 impl From<u16> for SafetyStatusB {
     fn from(val: u16) -> Self {
         Self {
-            otf: (val & 0x0080) != 0, // Bit 7: OTF (FET Overtemperature)
-            oot: (val & 0x0040) != 0, // Bit 6: OOT / OVT
-            utint: (val & 0x0020) != 0,
-            ut_dchg: (val & 0x0010) != 0,
-            ut_chg: (val & 0x0008) != 0,
-            ocd3: (val & 0x0001) != 0,
+            otf: (val & 0x0080) != 0,
+            otint: (val & 0x0040) != 0,
+            otd: (val & 0x0020) != 0,
+            otc: (val & 0x0010) != 0,
+            utint: (val & 0x0004) != 0,
+            utd: (val & 0x0002) != 0,
+            utc: (val & 0x0001) != 0,
         }
     }
 }

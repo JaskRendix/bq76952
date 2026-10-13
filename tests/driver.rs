@@ -498,7 +498,6 @@ fn test_get_security_state() {
 
 #[test]
 fn test_get_safety_status_b() {
-    // ocd3 expects bit 0 (val & 0x0001 != 0)
     let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
         0x10,
         vec![0x05],
@@ -507,7 +506,9 @@ fn test_get_safety_status_b() {
 
     let mut dev = Bq76952::new(&mut i2c, 0x10);
     let status = dev.get_safety_status_b().unwrap();
-    assert!(status.ocd3);
+
+    assert!(status.utc);
+
     i2c.done();
 }
 
