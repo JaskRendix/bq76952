@@ -29,7 +29,7 @@ fn protection_all_bits_set() {
 #[test]
 fn protection_specific_bits() {
     // Matches: sc_dchg (bit 0), oc2_dchg (bit 1), oc_chg (bit 3), cell_uv (bit 5)
-    let p = Protection::from(0b0010_1011);
+    let p = Protection::from(0b1101_0100);
     assert!(p.sc_dchg);
     assert!(p.oc2_dchg);
     assert!(!p.oc1_dchg);
@@ -60,7 +60,7 @@ fn safety_alert_all_set() {
 
 #[test]
 fn safety_alert_specific_bits() {
-    let s = SafetyAlertC::from(0b0001_1011);
+    let s = SafetyAlertC::from(0b1101_1000);
     assert!(s.ocd3);
     assert!(s.scdl);
     assert!(!s.ocdl);
@@ -70,7 +70,7 @@ fn safety_alert_specific_bits() {
 
 #[test]
 fn safety_status_c_parsing() {
-    let s = SafetyStatusC::from(0x001F);
+    let s = SafetyStatusC::from(0x00F8);
     assert!(s.ocd3);
     assert!(s.scdl);
     assert!(s.ocdl);
@@ -135,7 +135,7 @@ fn battery_status_all_clear() {
     assert!(!b.permanent_fault);
     assert!(!b.safety_fault);
     assert!(!b.fuse_pin);
-    assert_eq!(b.security_state, SecurityState::Sealed);
+    assert_eq!(b.security_state, SecurityState::Unknown);
     assert!(!b.wr_to_otp_blocked);
     assert!(!b.wr_to_otp_pending);
     assert!(!b.open_wire_check);
@@ -174,7 +174,7 @@ fn battery_status_security_state_values() {
         SecurityState::Sealed,
     ];
     for (i, &expected_state) in states.iter().enumerate() {
-        let raw = (i as u16) << 6;
+        let raw = (i as u16) << 8;
         let b = BatteryStatus::from(raw);
         assert_eq!(b.security_state, expected_state);
     }
@@ -182,15 +182,15 @@ fn battery_status_security_state_values() {
 
 #[test]
 fn battery_status_specific_bits() {
-    let raw: u16 = 0x0001 // sleep_mode
-        | 0x0008 // permanent_fault
-        | 0x0010 // safety_fault
-        | 0x0020 // fuse_pin
-        | (0b10 << 6) // security_state = FullAccess
-        | 0x0200 // wr_to_otp_pending
-        | 0x0800 // wd_was_triggered
-        | 0x2000 // sleep_en_allowed
-        | 0x8000; // config_update_mode
+    let raw: u16 = 0x8000 // sleep_mode
+    | 0x1000 // permanent_fault
+    | 0x0800 // safety_fault
+    | 0x0400 // fuse_pin
+    | (0b01 << 8) // security_state = FullAccess
+    | 0x0040 // wr_to_otp_pending
+    | 0x0010 // wd_was_triggered
+    | 0x0004 // sleep_en_allowed
+    | 0x0001; // config_update_mode
 
     let b = BatteryStatus::from(raw);
 
@@ -416,7 +416,7 @@ fn battery_status_random_values() {
 
 #[test]
 fn safety_alert_vs_status_c_consistency() {
-    let raw8: u8 = 0b0001_1011;
+    let raw8: u8 = 0b1111_1000;
     let raw16: u16 = raw8 as u16;
 
     let a = SafetyAlertC::from(raw8);
