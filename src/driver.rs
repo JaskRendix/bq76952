@@ -153,7 +153,7 @@ where
 
     /// Get current (mA)
     pub fn get_current(&mut self) -> Result<i16, Error<E>> {
-        Ok(self.direct_command(0x38)? as i16)
+        Ok(self.direct_command(0x3A)? as i16)
     }
 
     /// Set Cell Overvoltage Protection limits
@@ -798,7 +798,7 @@ mod tests {
         let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
             0x10,
             vec![0x12],
-            vec![0x40, 0x00],
+            vec![0x00, 0x02],
         )]);
 
         let mut dev = Bq76952::new(&mut i2c, 0x10);
@@ -813,7 +813,7 @@ mod tests {
         let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
             0x10,
             vec![0x05],
-            vec![0x00, 0x80],
+            vec![0x01, 0x00],
         )]);
 
         let mut dev = Bq76952::new(&mut i2c, 0x10);
@@ -828,7 +828,7 @@ mod tests {
         let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
             0x10,
             vec![0x06],
-            vec![0x10, 0x00],
+            vec![0x08, 0x00],
         )]);
 
         let mut dev = Bq76952::new(&mut i2c, 0x10);
@@ -869,7 +869,7 @@ mod tests {
         let mut i2c = I2cMock::new(&[I2cTransaction::write_read(
             0x10,
             vec![0x6E],
-            vec![0x00, 0x80],
+            vec![0x01, 0x00],
         )]);
 
         let mut dev = Bq76952::new(&mut i2c, 0x10);
