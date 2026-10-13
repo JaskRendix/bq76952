@@ -14,7 +14,7 @@ pub use driver::Bq76952;
 pub use error::Error;
 pub use registers::{PROTECTION_CONFIGURATION, REG0_CONFIG};
 pub use types::{
-    AlarmStatus, BatteryStatus, Fet, FetState, PermanentFaults, Protection, SafetyAlertC,
-    SafetyStatusA, SafetyStatusB, SafetyStatusC, ScdThreshold, SecurityState,
+    AlarmStatus, BatteryStatus, Fet, FetState, FetStatus, PermanentFaults, Protection,
+    SafetyAlertC, SafetyStatusA, SafetyStatusB, SafetyStatusC, ScdThreshold, SecurityState,
     TemperatureProtection, Thermistor,
 };

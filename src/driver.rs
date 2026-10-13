@@ -312,6 +312,12 @@ where
         Ok(SafetyStatusC::from(raw))
     }
 
+    /// Read and parse FET Status flags
+    pub fn get_fet_status(&mut self) -> Result<FetStatus, Error<E>> {
+        let raw = self.direct_command(CMD_FET_STATUS)?;
+        Ok(FetStatus::from(raw))
+    }
+
     /// Request the device to enter Sleep mode
     pub fn enter_sleep_mode(&mut self) -> Result<(), Error<E>> {
         self.sub_command(SUBCMD_SLEEP_ENABLE)

@@ -1,6 +1,6 @@
 use bq76952::{
-    AlarmStatus, BatteryStatus, Fet, FetState, PermanentFaults, Protection, SafetyAlertC,
-    SafetyStatusA, SafetyStatusB, SafetyStatusC, ScdThreshold, SecurityState,
+    AlarmStatus, BatteryStatus, Fet, FetState, FetStatus, PermanentFaults, Protection,
+    SafetyAlertC, SafetyStatusA, SafetyStatusB, SafetyStatusC, ScdThreshold, SecurityState,
     TemperatureProtection, Thermistor,
 };
 
@@ -432,4 +432,43 @@ fn safety_alert_vs_status_c_consistency() {
     assert_eq!(a.scdl, s.scdl);
     assert_eq!(a.ocdl, s.ocdl);
     assert_eq!(a.covl, s.covl);
+}
+
+#[test]
+fn fet_status_all_clear() {
+    let s = FetStatus::from(0x0000);
+
+    assert!(!s.alrt_pin);
+    assert!(!s.ddsg_pin);
+    assert!(!s.dchg_pin);
+    assert!(!s.pdsg_fet);
+    assert!(!s.dsg_fet);
+    assert!(!s.pchg_fet);
+    assert!(!s.chg_fet);
+}
+
+#[test]
+fn fet_status_all_set() {
+    let s = FetStatus::from(0x007F);
+
+    assert!(s.alrt_pin);
+    assert!(s.ddsg_pin);
+    assert!(s.dchg_pin);
+    assert!(s.pdsg_fet);
+    assert!(s.dsg_fet);
+    assert!(s.pchg_fet);
+    assert!(s.chg_fet);
+}
+
+#[test]
+fn fet_status_specific_bits() {
+    let s = FetStatus::from(0b0100_0101);
+
+    assert!(s.alrt_pin); // bit 6
+    assert!(!s.ddsg_pin); // bit 5
+    assert!(!s.dchg_pin); // bit 4
+    assert!(!s.pdsg_fet); // bit 3
+    assert!(s.dsg_fet); // bit 2
+    assert!(!s.pchg_fet); // bit 1
+    assert!(s.chg_fet); // bit 0
 }

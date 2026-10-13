@@ -305,3 +305,29 @@ impl From<u16> for PermanentFaults {
         }
     }
 }
+
+/// FET Status register flags
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FetStatus {
+    pub alrt_pin: bool,
+    pub ddsg_pin: bool,
+    pub dchg_pin: bool,
+    pub pdsg_fet: bool,
+    pub dsg_fet: bool,
+    pub pchg_fet: bool,
+    pub chg_fet: bool,
+}
+
+impl From<u16> for FetStatus {
+    fn from(val: u16) -> Self {
+        Self {
+            alrt_pin: (val & 0x0040) != 0,
+            ddsg_pin: (val & 0x0020) != 0,
+            dchg_pin: (val & 0x0010) != 0,
+            pdsg_fet: (val & 0x0008) != 0,
+            dsg_fet: (val & 0x0004) != 0,
+            pchg_fet: (val & 0x0002) != 0,
+            chg_fet: (val & 0x0001) != 0,
+        }
+    }
+}
