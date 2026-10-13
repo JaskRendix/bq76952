@@ -170,7 +170,7 @@ where
         Ok(self.direct_command(CMD_CC2_CURRENT)? as i16)
     }
 
-    /// Set Cell Overvoltage Protection limits
+    /// Set Cell Overvoltage SafetyAlertA limits
     pub fn set_cell_overvoltage_protection(&mut self, mv: u16, ms: u16) -> Result<(), Error<E>> {
         let thresh = (mv as f32 / 50.6).clamp(20.0, 110.0) as u8;
         let dly = ((ms as f32 / 3.3) - 2.0).clamp(1.0, 2047.0) as u16;
@@ -180,7 +180,7 @@ where
         Ok(())
     }
 
-    /// Set Cell Undervoltage Protection limits
+    /// Set Cell Undervoltage SafetyAlertA limits
     pub fn set_cell_undervoltage_protection(&mut self, mv: u16, ms: u16) -> Result<(), Error<E>> {
         let thresh = (mv as f32 / 50.6).clamp(10.0, 90.0) as u8;
         let dly = ((ms as f32 / 3.3) - 2.0).clamp(1.0, 2047.0) as u16;
@@ -304,6 +304,12 @@ where
     pub fn get_safety_alert_b(&mut self) -> Result<SafetyAlertB, Error<E>> {
         let raw = self.direct_command(CMD_SAFETY_ALERT_B)? as u8;
         Ok(SafetyAlertB::from(raw))
+    }
+
+    /// Read and parse Safety Status A flags (Register CMD_SAFETY_ALERT_A)
+    pub fn get_safety_alert_a(&mut self) -> Result<SafetyAlertA, Error<E>> {
+        let raw = self.direct_command(CMD_SAFETY_ALERT_A)? as u8;
+        Ok(SafetyAlertA::from(raw))
     }
 
     /// Read and parse Safety Status B flags (Register CMD_SAFETY_STATUS_B)

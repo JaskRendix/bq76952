@@ -64,29 +64,6 @@ pub enum ScdThreshold {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Protection {
-    pub sc_dchg: bool,
-    pub oc2_dchg: bool,
-    pub oc1_dchg: bool,
-    pub oc_chg: bool,
-    pub cell_ov: bool,
-    pub cell_uv: bool,
-}
-
-impl From<u8> for Protection {
-    fn from(val: u8) -> Self {
-        Self {
-            sc_dchg: (val & 0x80) != 0,
-            oc2_dchg: (val & 0x40) != 0,
-            oc1_dchg: (val & 0x20) != 0,
-            oc_chg: (val & 0x10) != 0,
-            cell_ov: (val & 0x08) != 0,
-            cell_uv: (val & 0x04) != 0,
-        }
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SafetyAlertC {
     pub ocd3: bool,
     pub scdl: bool,
@@ -127,6 +104,30 @@ impl From<u16> for SafetyStatusC {
             covl: (val & 0x0010) != 0,
             pto: (val & 0x0004) != 0,
             hwdf: (val & 0x0002) != 0,
+        }
+    }
+}
+
+/// Safety Alert A flags
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SafetyAlertA {
+    pub scd: bool,
+    pub ocd2: bool,
+    pub ocd1: bool,
+    pub occ: bool,
+    pub cov: bool,
+    pub cuv: bool,
+}
+
+impl From<u8> for SafetyAlertA {
+    fn from(val: u8) -> Self {
+        Self {
+            scd: (val & 0x80) != 0,
+            ocd2: (val & 0x40) != 0,
+            ocd1: (val & 0x20) != 0,
+            occ: (val & 0x10) != 0,
+            cov: (val & 0x08) != 0,
+            cuv: (val & 0x04) != 0,
         }
     }
 }

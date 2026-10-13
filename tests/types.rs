@@ -1,40 +1,43 @@
 use bq76952::{
-    AlarmStatus, BatteryStatus, Fet, FetState, FetStatus, PermanentFaults, Protection,
+    AlarmStatus, BatteryStatus, Fet, FetState, FetStatus, PermanentFaults, SafetyAlertA,
     SafetyAlertB, SafetyAlertC, SafetyStatusA, SafetyStatusB, SafetyStatusC, ScdThreshold,
     SecurityState, Thermistor,
 };
 
 #[test]
-fn protection_all_bits_clear() {
-    let p = Protection::from(0x00);
-    assert!(!p.sc_dchg);
-    assert!(!p.oc2_dchg);
-    assert!(!p.oc1_dchg);
-    assert!(!p.oc_chg);
-    assert!(!p.cell_ov);
-    assert!(!p.cell_uv);
+fn safety_alert_a_all_clear() {
+    let s = SafetyAlertA::from(0x00);
+
+    assert!(!s.scd);
+    assert!(!s.ocd2);
+    assert!(!s.ocd1);
+    assert!(!s.occ);
+    assert!(!s.cov);
+    assert!(!s.cuv);
 }
 
 #[test]
-fn protection_all_bits_set() {
-    let p = Protection::from(0xFF);
-    assert!(p.sc_dchg);
-    assert!(p.oc2_dchg);
-    assert!(p.oc1_dchg);
-    assert!(p.oc_chg);
-    assert!(p.cell_ov);
-    assert!(p.cell_uv);
+fn safety_alert_a_all_set() {
+    let s = SafetyAlertA::from(0xFF);
+
+    assert!(s.scd);
+    assert!(s.ocd2);
+    assert!(s.ocd1);
+    assert!(s.occ);
+    assert!(s.cov);
+    assert!(s.cuv);
 }
 
 #[test]
-fn protection_specific_bits() {
-    let p = Protection::from(0b1101_0100);
-    assert!(p.sc_dchg);
-    assert!(p.oc2_dchg);
-    assert!(!p.oc1_dchg);
-    assert!(p.oc_chg);
-    assert!(!p.cell_ov);
-    assert!(p.cell_uv);
+fn safety_alert_a_specific_bits() {
+    let s = SafetyAlertA::from(0b1101_0100);
+
+    assert!(s.scd); // bit 7
+    assert!(s.ocd2); // bit 6
+    assert!(!s.ocd1); // bit 5
+    assert!(s.occ); // bit 4
+    assert!(!s.cov); // bit 3
+    assert!(s.cuv); // bit 2
 }
 
 #[test]
